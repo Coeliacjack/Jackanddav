@@ -56,12 +56,12 @@ void read_sysconfig(const char *filename, long *time_quantum)
 
     //parameters: from buffer, max number of characters to read, file pointer
     while(fgets(line , MAX_LENGTH , file) != NULL){
-        /*char *split_lines = strtok(line, "\n\t\r"); //splits newline, tab and returns
+        char *split_lines = strtok(line, "\n\t\r"); //splits newline, tab and returns
 
         if (split_lines[0] == '#' || " " == NULL) {
             continue;   //skips comments
         }
-        */
+        
        printf("%s\n", line);
     }    
     
