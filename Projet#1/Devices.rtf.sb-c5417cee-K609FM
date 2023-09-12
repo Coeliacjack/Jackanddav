@@ -1,0 +1,28 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;\red234\green234\blue234;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c93333\c93333\c93333;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28\fsmilli14300 \cf0 \cb2 \expnd0\expndtw0\kerning0
+#            devicename   readspeed      writespeed\
+#\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 device
+\f0\b0        usb3.1       640000000Bps   640000000Bps\
+
+\f1\b device
+\f0\b0        terminal     10Bps          3000000Bps\
+
+\f1\b device
+\f0\b0        hd           160000000Bps   80000000Bps\
+
+\f1\b device
+\f0\b0        ssd          480000000Bps   420000000Bps\
+#\
+
+\f1\b timequantum
+\f0\b0   100usec}

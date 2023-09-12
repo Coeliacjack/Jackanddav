@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Bold;\f2\fnil\fcharset0 Menlo-Bold;
+}
+{\colortbl;\red255\green255\blue255;\red234\green234\blue234;\red0\green0\blue0;\red251\green0\blue7;
+}
+{\*\expandedcolortbl;;\cssrgb\c93333\c93333\c93333;\cssrgb\c0\c0\c0;\cssrgb\c100000\c0\c0;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28\fsmilli14300 \cf0 \cb2 \expnd0\expndtw0\kerning0
+#\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 shortsleep
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 10usecs    sleep   1000000usecs\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 50usecs    exit\
+#\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 longsleep
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 10usecs    sleep   5000000usecs\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 50usecs    exit\
+#\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 cal
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 80usecs    write   terminal 2000B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 90usecs    exit\
+#\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 copyfile
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 200usecs   read    hd       48000B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 300usecs   write   hd       48000B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 600usecs   read    hd       21000B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 700usecs   write   hd       21000B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 1000usecs  exit\
+#\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 shell
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 100usecs   write   terminal 10B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 120usecs   read    terminal 4B\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 220usecs   spawn   cal\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 230usecs   wait\
+
+\f2\b \cf4 \\t
+\f0\b0 \cf0 1000usecs  exit\
+#}
