@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 //  you may need other standard header files
 
 
@@ -63,23 +64,90 @@ void line_spitter(char *str)
 
 }
 */
+typedef struct Devices{
+    char device_name[MAX_DEVICE_NAME];              //DEVICE NAME
+    int read_speed;
+    int write_speed;
+}Device;
 
-int main(int argc, char *argv[])
-{
-        if(argc != 2)
-        {
-            printf("Incorrect number of arguments entered");
-            exit(EXIT_FAILURE);
+typedef struct System_Call{             
+    int cumutive_time_on_CPU;
+    char Syst_call;
+    char Element_3;
+    int data_size;
+}System_Call;
+
+Device device_list[MAX_DEVICES];
+int device_count = 0;
+char program_cal[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS][Buffer_size]; // buffer for commands
+char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
+
+
+
+int calc_device_io(char device_name[], char read_or_write[], char size[]){
+
+    Device device;
+    int time_taken;
+
+    for (int i = 0; i < device_count; i++) {
+        if (strcmp(device_name, device_list[i].device_name) == 0) {
+            device = device_list[i];
         }
+    }
+    if (strcmp(read_or_write, "read") == 0) {
 
+        time_taken = (atoi(size)*pow(10,6))/device.read_speed ;
+    }
+    else {
+
+        time_taken = (atoi(size)*pow(10,6))/device.write_speed ;
+    }
+
+    return time_taken;
+
+}
+Device parse_device_line(char *line) {
+    Device device;
+    char read_speed_str[20], write_speed_str[20];
+    sscanf(line, "device %19s %19s %19s", device.device_name, read_speed_str, write_speed_str);
+
+    // Remove 'Bps' from the speed and convert it to int
+    device.read_speed = atoi(read_speed_str);
+    device.write_speed = atoi(write_speed_str);
+
+    return device;
+}
+
+void read_devices_from_file(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        perror("Could not open the file");
+        exit(1);
+    }
+
+    char line[Buffer_size];
+    while (fgets(line, sizeof(line), file)) {
+        // Ignore comments and empty lines
+        if (line[0] == '#' || line[0] == '\n') continue;
+
+        if(device_count <= MAX_DEVICES) {
+            device_list[device_count] = parse_device_line(line);
+            device_count++;
+        } else {
+            fprintf(stderr, "Reached maximum device limit. Ignoring further entries.\n");
+            break;
+        }
+    }
+    fclose(file);
+}
+void read_progams_from_file(char file_name[]){
     FILE *file;
     int program_count = 0;
     int syscall_count = 0;
     char line[Buffer_size];
-    char program_cal[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS][Buffer_size]; // buffer for commands
-    char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
+    
 
-    file = fopen(argv[1], "r");
+    file = fopen(file_name, "r");
 
     if (file == NULL) {
         printf("Error opening file");
@@ -95,7 +163,6 @@ int main(int argc, char *argv[])
             //printf("A line was skipped\n");
             continue;
         }
-
         else if (line[0] == ' ')
             {
             
@@ -112,9 +179,24 @@ int main(int argc, char *argv[])
            
             //printf("%s\n", line);
         }
-      
-
-        
     }
+}
+
+int main(int argc, char *argv[])
+{
+        if(argc != 3)
+        {
+            printf("Incorrect number of arguments entered");
+            exit(EXIT_FAILURE);
+        }
+    read_devices_from_file(argv[1]);
+    read_progams_from_file(argv[2]);
+
+    for (int i = 0; i < device_count; i++)
+    {
+        printf("devices:%s\n" ,device_list[i].device_name);
+    }
+    
+
     
 }
