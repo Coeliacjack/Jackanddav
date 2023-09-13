@@ -70,16 +70,18 @@ typedef struct Devices{
     int write_speed;
 }Device;
 
-typedef struct System_Call{             
+typedef struct PROCESES{             
     int cumutive_time_on_CPU;
-    char Syst_call;
-    char Element_3;
+    char Syst_call[20];
+    char Element_3[20];
     int data_size;
-}System_Call;
+}PROCESS;
 
 Device device_list[MAX_DEVICES];
 int device_count = 0;
-char program_cal[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS][Buffer_size]; // buffer for commands
+int program_count = 0;
+
+PROCESS program_call[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS]; // buffer for commands
 char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
 
 
@@ -140,9 +142,22 @@ void read_devices_from_file(const char *filename) {
     }
     fclose(file);
 }
+PROCESS parse_process_line(char *line) {
+    PROCESS process;
+    char time_on_CPU_str[20], data_size_str[20];
+    sscanf(line, "\t %19s %19s %19s %19s", time_on_CPU_str, process.Syst_call, process.Element_3, data_size_str);
+
+    // Remove 'B or usecs' from the time/size and convert it to int
+    process.cumutive_time_on_CPU = atoi(time_on_CPU_str);
+    process.data_size = atoi(data_size_str);
+    //printf("%s\n", process.Syst_call);
+
+    return process;
+}
+
 void read_progams_from_file(char file_name[]){
     FILE *file;
-    int program_count = 0;
+    
     int syscall_count = 0;
     char line[Buffer_size];
     
@@ -166,7 +181,9 @@ void read_progams_from_file(char file_name[]){
         else if (line[0] == ' ')
             {
             
-                strcpy(program_cal[program_count][syscall_count], line);
+                //strcpy(program_call[program_count][syscall_count], line);
+                program_call[program_count][syscall_count] = parse_process_line(line);
+                printf("process:%s\n" ,program_cal[program_count][syscall_count].Syst_call);
                 syscall_count ++;
                 //line_spitter(line);
             }
@@ -174,7 +191,7 @@ void read_progams_from_file(char file_name[]){
         {
             //printf("%s\n", line);
             strcpy(program_index[program_count], line);
-            printf("%s\n", program_index[program_count]);
+            //printf("%s\n", program_index[program_count]);
             program_count ++;
            
             //printf("%s\n", line);
@@ -191,12 +208,29 @@ int main(int argc, char *argv[])
         }
     read_devices_from_file(argv[1]);
     read_progams_from_file(argv[2]);
-
-    for (int i = 0; i < device_count; i++)
+    
+    printf("process:%s\n" ,program_call[program_count][syscall_count].Syst_call);
+    /*
+    for (int i = 0; i < 2; i++)
     {
-        printf("devices:%s\n" ,device_list[i].device_name);
+        printf("process:%s\n" ,program_call[0][i].Syst_call);
     }
     
+    for (int i = 0; i < program_count; i++)
+    {
+        for (int n = 0; n < 40; n++)
+        {
+            if (strcmp(program_call[i][n].Syst_call, "exit") == 0)
+            {
+                break;
+            }
+            else
+            {
+                printf("process:%s\n" ,program_call[2][n].Syst_call);
+            }
+        }
+    }
+    */
 
     
 }
