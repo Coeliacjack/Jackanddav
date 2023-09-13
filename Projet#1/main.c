@@ -7,7 +7,7 @@
 
 //  CITS2002 Project 1 2023
 //  Student1:   23451626   DAVIN DO
-//  Student2:   STUDENT-NUMBER2   NAME-2
+//  Student2:   23616299    Jack Carter   
 
 
 //  myscheduler (v1.0)
@@ -80,11 +80,24 @@ typedef struct PROCESES{
 Device device_list[MAX_DEVICES];
 int device_count = 0;
 int program_count = 0;
-
+int Time_Quantum = DEFAULT_TIME_QUANTUM;
 PROCESS program_call[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS]; // buffer for commands
 char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
+/*
+void time_on_cpu(int process[]){
+    // pass in the array that is at the frount of the queue
+    // command #, process #, cumulative_process_time
 
+    int required_time = program_call[process[0]][process[1]].cumutive_time_on_CPU -process[2]
+    
+    if (required_time > )
+    {
+        code 
+    }    
 
+    
+}
+*/
 
 int calc_device_io(char device_name[], char read_or_write[], char size[]){
 
@@ -120,7 +133,7 @@ Device parse_device_line(char *line) {
     return device;
 }
 
-void read_devices_from_file(const char *filename) {
+void read_sysconfig(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
         perror("Could not open the file");
@@ -131,7 +144,15 @@ void read_devices_from_file(const char *filename) {
     while (fgets(line, sizeof(line), file)) {
         // Ignore comments and empty lines
         if (line[0] == '#' || line[0] == '\n') continue;
-
+        
+         if (line[0] == 't')
+        {
+            char time_str[9];
+            sscanf(line, "timequantum %9s", time_str);
+            Time_Quantum = atoi(time_str);
+             
+        }
+    
         if(device_count <= MAX_DEVICES) {
             device_list[device_count] = parse_device_line(line);
             device_count++;
@@ -141,7 +162,9 @@ void read_devices_from_file(const char *filename) {
         }
     }
     fclose(file);
+    
 }
+
 PROCESS parse_process_line(char *line) {
     PROCESS process;
     char time_on_CPU_str[20], data_size_str[20];
@@ -155,7 +178,7 @@ PROCESS parse_process_line(char *line) {
     return process;
 }
 
-void read_progams_from_file(char file_name[]){
+void read_commands(char file_name[]){
     int syscall_count = 0;
     FILE *file;
     
@@ -200,23 +223,44 @@ void read_progams_from_file(char file_name[]){
     fclose(file);
 }
 
+void execute_commands(char *program_name)
+{
+    // This adds a program to the ready queue
+
+    // this will be a small append
+    printf("The program %s has been added to the running queue \n", program_name);
+}
+int index_process(char *program_name)
+{   // this program returns an int of which position the program is in
+    int i = 0;
+    while (1)
+    {
+        if (strcmp(program_name, program_index[i]) == 0)
+        {
+            return i;
+        }
+        i++;
+    }
+}
+
 int main(int argc, char *argv[])
 {
-    if(argc != 3)
-    {
-       /* printf("Incorrect number of arguments entered");
+    //  ENSURE THAT WE HAVE THE CORRECT NUMBER OF COMMAND-LINE ARGUMENTS
+    if(argc != 3) {
+        printf("Usage: %s sysconfig-file command-file\n", argv[0]);
         exit(EXIT_FAILURE);
-        */
-       
     }
-    read_devices_from_file("Devices.txt");
-    read_progams_from_file("Test2.txt");
-    //printf("Time:%d\n", program_call[3][0].cumutive_time_on_CPU);
-    //printf("Device:%s\n", device_list[0].device_name);
+    //  READ THE SYSTEM CONFIGURATION FILE
+    read_sysconfig(argv[1]);
+
+    //  READ THE COMMAND FILE
+    read_commands(argv[2]);
+    //starts the first program
+    execute_commands(program_index[0]);
     
     
    
-    
+    /*
     for (int i = 0; i < program_count -1 ; i++)
     {
         for (int n = 0; n < 40; n++)
@@ -229,5 +273,6 @@ int main(int argc, char *argv[])
             }
         }
     }
+    */
     
 }
