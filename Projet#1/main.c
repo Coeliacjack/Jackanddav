@@ -83,21 +83,30 @@ int program_count = 0;
 int Time_Quantum = DEFAULT_TIME_QUANTUM;
 PROCESS program_call[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS]; // buffer for commands
 char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
-/*
+
 void time_on_cpu(int process[]){
     // pass in the array that is at the frount of the queue
     // command #, process #, cumulative_process_time
 
     int required_time = program_call[process[0]][process[1]].cumutive_time_on_CPU -process[2]
     
-    if (required_time > )
+    if (required_time > Time_Quantum)
     {
-        code 
+        Ready_queue[0][3] += Time_Quantum;
+        CPU_time += Time_Quantum;
+        
     }    
+    
+    else{
+
+        CPU_time += required_time
+        // call system call
+        
+    } 
 
     
 }
-*/
+
 
 int calc_device_io(char device_name[], char read_or_write[], char size[]){
 
