@@ -183,7 +183,7 @@ void read_progams_from_file(char file_name[]){
             
                 //strcpy(program_call[program_count][syscall_count], line);
                 program_call[program_count][syscall_count] = parse_process_line(line);
-                printf("process:%s\n" ,program_cal[program_count][syscall_count].Syst_call);
+                //printf("Process:%d\n", program_call[program_count][syscall_count].cumutive_time_on_CPU);
                 syscall_count ++;
                 //line_spitter(line);
             }
@@ -208,14 +208,16 @@ int main(int argc, char *argv[])
         }
     read_devices_from_file(argv[1]);
     read_progams_from_file(argv[2]);
+    printf("Time:%d\n", program_call[3][0].cumutive_time_on_CPU);
+    //printf("Process:%s\n", program_call[0][0].Syst_call);
     
-    printf("process:%s\n" ,program_call[program_count][syscall_count].Syst_call);
-    /*
-    for (int i = 0; i < 2; i++)
+   /*
+    
+    for (int i = 0; i < 20; i++)
     {
-        printf("process:%s\n" ,program_call[0][i].Syst_call);
+        printf("process:%s\n" ,program_call[3][i].Syst_call);
     }
-    
+ 
     for (int i = 0; i < program_count; i++)
     {
         for (int n = 0; n < 40; n++)
