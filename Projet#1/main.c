@@ -156,11 +156,10 @@ PROCESS parse_process_line(char *line) {
 }
 
 void read_progams_from_file(char file_name[]){
+    int syscall_count = 0;
     FILE *file;
     
-    int syscall_count = 0;
     char line[Buffer_size];
-    
 
     file = fopen(file_name, "r");
 
@@ -171,6 +170,7 @@ void read_progams_from_file(char file_name[]){
 
     while (fgets(line, Buffer_size, file)) 
     {
+        
         line[strlen(line)-1] = '\0';
         
         if (line[0] == '#') // if a comment, skip
@@ -182,8 +182,7 @@ void read_progams_from_file(char file_name[]){
             {
             
                 //strcpy(program_call[program_count][syscall_count], line);
-                program_call[program_count][syscall_count] = parse_process_line(line);
-                //printf("Process:%d\n", program_call[program_count][syscall_count].cumutive_time_on_CPU);
+                program_call[program_count-1][syscall_count] = parse_process_line(line);
                 syscall_count ++;
                 //line_spitter(line);
             }
@@ -193,46 +192,42 @@ void read_progams_from_file(char file_name[]){
             strcpy(program_index[program_count], line);
             //printf("%s\n", program_index[program_count]);
             program_count ++;
-           
+            syscall_count = 0;
             //printf("%s\n", line);
         }
+        
     }
+    fclose(file);
 }
 
 int main(int argc, char *argv[])
 {
-        if(argc != 3)
-        {
-            printf("Incorrect number of arguments entered");
-            exit(EXIT_FAILURE);
-        }
-    read_devices_from_file(argv[1]);
-    read_progams_from_file(argv[2]);
-    printf("Time:%d\n", program_call[3][0].cumutive_time_on_CPU);
-    //printf("Process:%s\n", program_call[0][0].Syst_call);
-    
-   /*
-    
-    for (int i = 0; i < 20; i++)
+    if(argc != 3)
     {
-        printf("process:%s\n" ,program_call[3][i].Syst_call);
+       /* printf("Incorrect number of arguments entered");
+        exit(EXIT_FAILURE);
+        */
+       
     }
- 
-    for (int i = 0; i < program_count; i++)
+    read_devices_from_file("Devices.txt");
+    read_progams_from_file("Test2.txt");
+    //printf("Time:%d\n", program_call[3][0].cumutive_time_on_CPU);
+    //printf("Device:%s\n", device_list[0].device_name);
+    
+    
+   
+    
+    for (int i = 0; i < program_count -1 ; i++)
     {
         for (int n = 0; n < 40; n++)
         {
+            printf("process:%s\n" ,program_call[i][n].Syst_call);
+
             if (strcmp(program_call[i][n].Syst_call, "exit") == 0)
             {
                 break;
             }
-            else
-            {
-                printf("process:%s\n" ,program_call[2][n].Syst_call);
-            }
         }
     }
-    */
-
     
 }
