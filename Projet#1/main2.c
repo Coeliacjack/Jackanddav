@@ -6,7 +6,7 @@
 
 
 //  CITS2002 Project 1 2023
-//  Student1:   23451626   DAVIN DO
+//  Student1:   23451626   Davin Do
 //  Student2:   23616299    Jack Carter
 
 
