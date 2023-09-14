@@ -114,8 +114,12 @@ bool isReadyQueueEmpty() {
     return ReadyQueue[0].front == ReadyQueue[0].rear;       //is front and rear equal?
 }
 
+bool isReadyQueueFull() {
+    return (ReadyQueue[0].rear + 1) % MAX_RUNNING_PROCESSES == ReadyQueue[0].front;  //is front next after rear? (using modulo)
+}
+
 void enqueueReadyQueue(Queue process) {
-    if((ReadyQueue[0].rear + 1) % MAX_RUNNING_PROCESSES == ReadyQueue[0].front) {       //check if full
+    if(isReadyQueueFull()) {       //check if full
         printf("queue is full\n");
         return;
     }
@@ -139,8 +143,12 @@ bool isBlockedQueueEmpty() {
     return BlockedQueue[0].front == BlockedQueue[0].rear;
 }
 
+bool isBlockedQueueFull() {
+    return (BlockedQueue[0].rear + 1) % MAX_RUNNING_PROCESSES == BlockedQueue[0].front;
+}
+
 void enqueueBlockedQueue(Queue process) {
-    if((BlockedQueue[0].rear + 1) % MAX_RUNNING_PROCESSES == BlockedQueue[0].front) {
+    if(isBlockedQueueFull()) {
         printf("queue is full\n");
         return;
     }
@@ -164,8 +172,12 @@ bool isWaitingQueueEmpty() {
     return WaitingQueue[0].front == WaitingQueue[0].rear;
 }
 
+bool isWaitingQueueFull() {
+    return (WaitingQueue[0].rear + 1) % MAX_RUNNING_PROCESSES == WaitingQueue[0].front;
+}
+
 void enqueueWaitingQueue(Queue process) {
-    if((WaitingQueue[0].rear + 1) % MAX_RUNNING_PROCESSES == WaitingQueue[0].front) {
+    if(isWaitingQueueFull()) {
         printf("queue is full\n");
         return;
     }
@@ -182,18 +194,6 @@ Queue dequeueWaitingQueue() {
     WaitingQueue[0].front = (WaitingQueue[0].front + 1) % MAX_RUNNING_PROCESSES;
     return process;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
