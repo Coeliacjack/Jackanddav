@@ -71,7 +71,7 @@ typedef struct Devices{
 }Device;
 
 
-typedef struct Process{
+typedef struct Processes{
     int cumulative_time_on_CPU;
     char Syst_call[20];
     char Element_3[20];
@@ -81,13 +81,27 @@ typedef struct Process{
 
 //QUEUE STUFF
 
-typedef struct Queue{
-    Process processes[MAX_RUNNING_PROCESSES];       //array to hold processes
+typedef struct QUEUE{
+    int process_num;
+    int command_num; 
+    int time_on_cpu;  
+    int process_id;    
     int front;
     int rear;
 }Queue;
 
+Device device_list[MAX_DEVICES];
+int device_count = 0;
+int program_count = 0;
+int process_id_counter = 0;
+int cumulative_time_on_CPU =0;
+int Time_Quantum = DEFAULT_TIME_QUANTUM;
+Process program_call[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS]; // buffer for commands
+char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
+Queue ReadyQueue[50], BlockedQueue[50], WaitingQueue[50];
 
+
+/*
 //set queues to -1 when empty
 void initializeQueue(Queue *q){
     q->front = -1;
@@ -139,36 +153,30 @@ Process dequeue(Queue *q) {
     }
 }
 
-
-Queue readyQueue;
-Queue blockedQueue;
+*/
 
 
+void time_on_cpu() {
 
-Device device_list[MAX_DEVICES];
-int device_count = 0;
-int program_count = 0;
-int Time_Quantum = DEFAULT_TIME_QUANTUM;
-Process program_call[MAX_COMMANDS][MAX_SYSCALLS_PER_PROCESS]; // buffer for commands
-char program_index[MAX_COMMANDS][MAX_COMMAND_NAME];
+    int command_num, process_num, command_time;
 
-
-
-void time_on_cpu(Process* procstruct, int commands, int syscall, int cumul_process_time) {
-
-    int required_time = program_call[commands][syscall].cumulative_time_on_CPU - cumul_process_time;
+    command_num = ReadyQueue[0].command_num;
+    process_num = ReadyQueue[0].process_num;
+    command_time = ReadyQueue[0].time_on_cpu;
+    int required_time = program_call[command_num][process_num].cumulative_time_on_CPU - command_time;
 
     if (required_time > Time_Quantum) {
 
-        strcpy(procstruct->Element_3, "Elapsed time");
-        procstruct->cumulative_time_on_CPU += Time_Quantum;
+        //strcpy(procstruct->Element_3, "Elapsed time");
+        //procstruct->c
+        program_call[command_num][process_num].cumulative_time_on_CPU += Time_Quantum;
+        cumulative_time_on_CPU += Time_Quantum;
     } else {
-        procstruct->cumulative_time_on_CPU += required_time;
+        //procstruct->
+        cumulative_time_on_CPU += required_time;
         // call system call
 
         //finish later
-
-
     }
 }
 
@@ -249,7 +257,6 @@ Process parse_process_line(char *line) {
     process.cumulative_time_on_CPU = atoi(time_on_CPU_str);
     process.data_size = atoi(data_size_str);
     //printf("%s\n", process.Syst_call);
-
     return process;
 }
 
@@ -300,22 +307,20 @@ void read_commands(char file_name[]){
 
 
 
-void execute_commands(Process *p, int command_id, int syscall_id
+void execute_commands(int command_id, int syscall_id)
 {
     // This adds a program to the ready queue
 
-
-
-    char *syscall = p->Syst_call;
+    char *syscall =program_call[ReadyQueue[0].command_num][ReadyQueue[1].process_num].Syst_call;
 
     if (strcmp(syscall, "spawn") == 0) {
-        enqueue
+        
 
         // Add the new process to the Ready queue.
         // Use enqeue() and the process information from program_call to do this.
     } else if (strcmp(syscall, "read") == 0 || strcmp(syscall, "write") == 0) {
         // Calculate the IO time and simulate it.
-        int io_time = calc_device_io(p->Element_3, syscall, p->data_size);
+        //int io_time = calc_device_io(p->Element_3, syscall, p->data_size);
         // You can then move the process to the Blocked queue for io_time.
     } else if (strcmp(syscall, "sleep") == 0) {
         // Move the process to the Blocked queue for the sleep duration.
@@ -326,22 +331,38 @@ void execute_commands(Process *p, int command_id, int syscall_id
         // Move the process to the Exit queue.
     }
 }
+/*
+void add_ready_queue(char *process_name){
+
+    //ReadyQueue[0] = 
+    command_struct(process_name);
 
 
+}
 
-int index_process(char *program_name)
+Queue command_struct(char *process_name){
+    Queue process;
+    process.process_id = process_id_counter;
+    //process.process_num = index_process(process_name);
+    process.command_num = 0;
+    process.time_on_cpu = 0;
+    process_id_counter++;
+    return  process;
+}
+
+int index_process(char *process_name)
 {   // this program returns an int of which position the program is in
     int i = 0;
     while (1)
     {
-        if (strcmp(program_name, program_index[i]) == 0)
+        if (strcmp(process_name, program_index[i]) == 0)
         {
             return i;
         }
         i++;
     }
 }
-
+*/
 int main(int argc, char *argv[])
 {
     //  ENSURE THAT WE HAVE THE CORRECT NUMBER OF COMMAND-LINE ARGUMENTS
@@ -355,8 +376,8 @@ int main(int argc, char *argv[])
     //  READ THE COMMAND FILE
     read_commands(argv[2]);
     //starts the first program
-    execute_commands(program_index[0]);
-
+    //add_ready_queue(program_index[0]);
+    
 
 
     /*
