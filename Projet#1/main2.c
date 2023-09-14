@@ -168,6 +168,7 @@ void time_on_cpu(Process* procstruct, int commands, int syscall, int cumul_proce
 
         //finish later
 
+
     }
 }
 
@@ -231,7 +232,7 @@ void read_sysconfig(const char *filename) {
             device_list[device_count] = parse_device_line(line);
             device_count++;
         } else {
-            fprintf(stderr, "Reached maximum device limit. Ignoring further entries.\n");
+            fprintf(stderr, "Max devices reached\n");
             break;
         }
     }
