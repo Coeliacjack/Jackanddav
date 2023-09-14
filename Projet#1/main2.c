@@ -159,14 +159,15 @@ Process dequeue(Queue *q) {
 */
 void sleep()
 {   
-    int wait_time = atoi(program_call[ReadyQueue[0].command_num][ReadyQueue[0].process_num].Syst_call);
+    int wait_time = atoi(program_call[ReadyQueue[0].command_num][ReadyQueue[0].process_num].Element_3);
     ReadyQueue[0].blocked_untill = sys_time + wait_time;
-    printf("%d", ReadyQueue[0].blocked_untill);
+    printf("%d\n", ReadyQueue[0].blocked_untill);
     //move ReadyQueue[0] to blocked queue
 }
 void Exit(){
     printf("Exiting\n");
     running_process -= 1;
+    printf("running_process:%i\n", running_process);
     // this will automatically be removed from the ready queue
 }
 
@@ -184,37 +185,44 @@ void execute_system_call()
         //int io_time = calc_device_io(p->Element_3, syscall, p->data_size);
         // You can then move the process to the Blocked queue for io_time.
     } else if (strcmp(syscall, "sleep") == 0) {
+        printf("Run; sleep");
         sleep();
     } else if (strcmp(syscall, "wait") == 0) {
         // Block the current process until its child processes have finished.
         // This might require some more structure to keep track of child processes.
     } else if (strcmp(syscall, "exit") == 0) {
+        printf("Run; exit");
         Exit();
+        
     }
 }
 
 
 
 void time_on_cpu() {
-
+    //printf("running a process");
     int command_num, process_num, command_time;
 
     command_num = ReadyQueue[0].command_num;
     process_num = ReadyQueue[0].process_num;
     command_time = ReadyQueue[0].time_on_cpu;
+    //printf("%d\n", command_time);
     int required_time = program_call[command_num][process_num].cumulative_time_on_CPU - command_time;
-
+    //printf("%d\n", program_call[command_num][process_num].cumulative_time_on_CPU);
     if (required_time > Time_Quantum) {
 
         //strcpy(procstruct->Element_3, "Elapsed time");
         //procstruct->c
-        program_call[command_num][process_num].cumulative_time_on_CPU += Time_Quantum;
+        ReadyQueue[0].time_on_cpu += Time_Quantum;
         cumulative_time_on_CPU += Time_Quantum;
+        
+        
     } else {
         //procstruct->
         cumulative_time_on_CPU += required_time;
-        ReadyQueue[0].process_num += 1;
+        ReadyQueue[0].time_on_cpu += required_time;
         execute_system_call();
+        ReadyQueue[0].process_num += 1;
 
         //finish later
     }
@@ -296,7 +304,7 @@ Process parse_process_line(char *line) {
     // Remove 'B or usecs' from the time/size and convert it to int
     process.cumulative_time_on_CPU = atoi(time_on_CPU_str);
     process.data_size = atoi(data_size_str);
-    //printf("%s\n", process.Syst_call);
+    //printf("%d\n", process.cumulative_time_on_CPU);
     return process;
 }
 
@@ -380,7 +388,7 @@ void running()
         // reorder Ready queue
         time_on_cpu();
     }
-    
+    printf("finished"); 
 }
 
 int main(int argc, char *argv[])
@@ -396,6 +404,7 @@ int main(int argc, char *argv[])
     //  READ THE COMMAND FILE
     read_commands(argv[2]);
     //starts the first program
+    printf("%s\n", program_call[0][0].Syst_call);    
     running();
 
     
