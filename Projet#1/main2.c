@@ -140,8 +140,8 @@ Process dequeue(Queue *q) {
 }
 
 
-
-
+Queue readyQueue;
+Queue blockedQueue;
 
 
 
@@ -298,13 +298,37 @@ void read_commands(char file_name[]){
     fclose(file);
 }
 
-void execute_commands(char *program_name)
+
+
+void execute_commands(Process *p, int command_id, int syscall_id
 {
     // This adds a program to the ready queue
 
-    // this will be a small append
-    printf("The program %s has been added to the running queue \n", program_name);
+
+
+    char *syscall = p->Syst_call;
+
+    if (strcmp(syscall, "spawn") == 0) {
+        enqueue
+
+        // Add the new process to the Ready queue.
+        // Use enqeue() and the process information from program_call to do this.
+    } else if (strcmp(syscall, "read") == 0 || strcmp(syscall, "write") == 0) {
+        // Calculate the IO time and simulate it.
+        int io_time = calc_device_io(p->Element_3, syscall, p->data_size);
+        // You can then move the process to the Blocked queue for io_time.
+    } else if (strcmp(syscall, "sleep") == 0) {
+        // Move the process to the Blocked queue for the sleep duration.
+    } else if (strcmp(syscall, "wait") == 0) {
+        // Block the current process until its child processes have finished.
+        // This might require some more structure to keep track of child processes.
+    } else if (strcmp(syscall, "exit") == 0) {
+        // Move the process to the Exit queue.
+    }
 }
+
+
+
 int index_process(char *program_name)
 {   // this program returns an int of which position the program is in
     int i = 0;
