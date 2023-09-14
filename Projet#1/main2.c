@@ -174,7 +174,7 @@ void Exit(){
 
 void execute_system_call()
 {
-    char *syscall =program_call[ReadyQueue[0].command_num][ReadyQueue[0].process_num].Syst_call;
+    char syscall = program_call[ReadyQueue[0].command_num][ReadyQueue[0].process_num].Syst_call;
 
     if (strcmp(syscall, "spawn") == 0) {
         
@@ -200,7 +200,7 @@ void execute_system_call()
 
 
 void time_on_cpu() {
-    //printf("running a process");
+    printf("running a process");
     int command_num, process_num, command_time;
 
     command_num = ReadyQueue[0].command_num;
@@ -215,12 +215,14 @@ void time_on_cpu() {
         //procstruct->c
         ReadyQueue[0].time_on_cpu += Time_Quantum;
         cumulative_time_on_CPU += Time_Quantum;
+        sys_time += Time_Quantum;
         
         
     } else {
         //procstruct->
         cumulative_time_on_CPU += required_time;
         ReadyQueue[0].time_on_cpu += required_time;
+        sys_time += Time_Quantum;;
         execute_system_call();
         ReadyQueue[0].process_num += 1;
 
@@ -374,14 +376,14 @@ Queue initilise_command_struct(char *process_name) {
     return  process;
 }
 
-void add_ready_queue(char *process_name){ // This adds a program to the ready queue
+void add_running_proess(char *process_name){ // This adds a program to the ready queue
     sys_time +=5;
-    ReadyQueue[0] = initilise_command_struct(process_name);
+    ReadyQueue[0] = initilise_command_struct(process_name); // call add to ready queue
 }
 
 void running()
 {   
-    add_ready_queue(program_index[0]);
+    add_running_proess(program_index[0]);
     time_on_cpu();
     while (running_process != 0)
     {
@@ -404,7 +406,7 @@ int main(int argc, char *argv[])
     //  READ THE COMMAND FILE
     read_commands(argv[2]);
     //starts the first program
-    printf("%s\n", program_call[0][0].Syst_call);    
+    //printf("%s\n", program_call[0][0].Syst_call);    
     running();
 
     
